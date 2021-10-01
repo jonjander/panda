@@ -23,14 +23,16 @@ def flood_tx(panda):
 
   BLOCK_SIZE = 50
   for i in range((len(tx_messages) + 1) // BLOCK_SIZE):
+    transferred = 0
     while True:
       try:
-        print(f"Sending block {BLOCK_SIZE * i}-{ BLOCK_SIZE * (i + 1)}: ", end="")
-        panda.can_send_many(tx_messages[BLOCK_SIZE * i : BLOCK_SIZE * (i + 1)])
+        print(f"Sending block {(BLOCK_SIZE * i) + transferred}-{ BLOCK_SIZE * (i + 1)}: ", end="")
+        panda.can_send_many(tx_messages[(BLOCK_SIZE * i) + transferred : BLOCK_SIZE * (i + 1)])
         print("OK")
         break
-      except usb1.USBErrorTimeout:
-        print("timeout")
+      except usb1.USBErrorTimeout as e:
+        transferred += e.transferred
+        print("timeout, transferred: ", transferred)
 
   print(f"Done sending {3*NUM_MESSAGES_PER_BUS} messages!")
 
