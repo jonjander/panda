@@ -31,7 +31,7 @@ def flood_tx(panda):
         print("OK")
         break
       except usb1.USBErrorTimeout as e:
-        transferred += e.transferred
+        transferred += (e.transferred // 16)
         print("timeout, transferred: ", transferred)
 
   print(f"Done sending {3*NUM_MESSAGES_PER_BUS} messages!")
